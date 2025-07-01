@@ -1,0 +1,23 @@
+package com.heartscopy.heartsocpyBeckEnd.repository.lenzerepository;
+
+import com.heartscopy.heartsocpyBeckEnd.domain.lenze.Lenze;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+import java.util.List;
+
+
+public interface LenzeRepository extends JpaRepository<Lenze, Long> {
+
+    Page<Lenze> findAll(Pageable pageable);
+
+
+    @Query("SELECT l FROM Lenze l WHERE l.topic LIKE %:keyword% ORDER BY l.createdAt DESC")
+    Page<Lenze> findByTopicContainingOrderByCreatedAtDesc(@Param("keyword") String keyword, Pageable pageable);
+
+    List<Lenze> findTop10ByOrderByCreatedAtDesc();
+}
+
