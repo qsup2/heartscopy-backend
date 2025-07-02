@@ -15,7 +15,7 @@ public interface LenzeRepository extends JpaRepository<Lenze, Long> {
     Page<Lenze> findAll(Pageable pageable);
 
 
-    @Query("SELECT l FROM Lenze l WHERE l.topic LIKE %:keyword% ORDER BY l.createdAt DESC")
+    @Query("SELECT l FROM Lenze l WHERE l.topic LIKE CONCAT('%', :keyword, '%') ORDER BY l.createdAt DESC")
     Page<Lenze> findByTopicContainingOrderByCreatedAtDesc(@Param("keyword") String keyword, Pageable pageable);
 
     List<Lenze> findTop10ByOrderByCreatedAtDesc();
