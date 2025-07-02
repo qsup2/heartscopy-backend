@@ -6,7 +6,6 @@ import com.heartscopy.heartsocpyBeckEnd.repository.commentrepository.CommentRepo
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,10 +15,13 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
 
-    public Comment createComment(CommentRequestDto dto) {
+    /**
+     * 댓글 생성 시 writerId를 컨트롤러에서 전달받은 uid로 받음
+     */
+    public Comment createComment(CommentRequestDto dto, String uid) {
         Comment comment = Comment.builder()
                 .lenzeId(dto.getLenzeId())
-                .writerId(dto.getWriterId())
+                .writerId(uid)  // 클라이언트가 아닌 서버에서 인증된 UID 사용
                 .comment(dto.getComment())
                 .agree(0)
                 .disagree(0)
@@ -28,18 +30,25 @@ public class CommentService {
     }
 
     @Transactional
-    public void deleteComment(Long commentId) {
+    public void deleteComment(Long commentId, String uid) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("댓글이 존재하지 않습니다."));
+        if (!comment.getWriterId().equals(uid)) {
+            throw new SecurityException("권한이 없습니다.");
+        }
         commentRepository.deleteById(commentId);
     }
 
     @Transactional
-    public void agreeComment(Long commentId) {
+    public void agreeComment(Long commentId, String uid) {
+        // 추가: 필요 시 권한 체크 또는 중복 동의 방지 로직 넣을 수 있음
         Comment comment = commentRepository.findById(commentId).orElseThrow();
         comment.setAgree(comment.getAgree() + 1);
     }
 
     @Transactional
-    public void disagreeComment(Long commentId) {
+    public void disagreeComment(Long commentId, String uid) {
+        // 추가: 필요 시 권한 체크 또는 중복 반대 방지 로직 넣을 수 있음
         Comment comment = commentRepository.findById(commentId).orElseThrow();
         comment.setDisagree(comment.getDisagree() + 1);
     }

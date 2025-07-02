@@ -22,6 +22,10 @@ public class ChoiceService {
     private final ChoiceRepository choiceRepository;
     private final ChoiceMapper choiceMapper;
 
+    /**
+     * 새로운 선택 생성
+     * userId는 컨트롤러에서 인증된 UID로 설정된 상태여야 함.
+     */
     public Choice makeChoice(Choice choice) {
         Optional<Choice> existing = choiceRepository.findByUserIdAndLenzeId(
                 choice.getUserId(), choice.getLenzeId()
@@ -34,11 +38,19 @@ public class ChoiceService {
         return choiceRepository.save(choice);
     }
 
+    /**
+     * 특정 사용자와 렌즈에 대해 선택된 값 조회
+     * @param userId 인증된 UID가 전달됨
+     */
     public Optional<String> getSelectedValue(String userId, Long lenzeId) {
         return choiceRepository.findByUserIdAndLenzeId(userId, lenzeId)
                 .map(Choice::getSelectedValue);
     }
 
+    /**
+     * 특정 사용자와 렌즈 선택 취소
+     * @param userId 인증된 UID
+     */
     @Transactional
     public void cancelChoice(String userId, Long lenzeId) {
         Optional<Choice> existing = choiceRepository.findByUserIdAndLenzeId(userId, lenzeId);
@@ -50,15 +62,25 @@ public class ChoiceService {
         }
     }
 
+    /**
+     * 인기 렌즈 상위 10개 반환
+     */
     public List<LenzeWithCountDto> findTop10LenzesByChoiceCount() {
         return choiceRepository.findTop10LenzesByChoiceCount(PageRequest.of(0, 10));
     }
 
+    /**
+     * 렌즈 ID로 모든 선택 삭제
+     */
     @Transactional
     public void deleteAllByLenzeId(Long lenzeId) {
         choiceRepository.deleteAllByLenzeId(lenzeId);
     }
 
+    /**
+     * 사용자와 매칭되는 다른 사용자 목록과 매칭 횟수 반환
+     * @param userId 인증된 UID
+     */
     public Map<String, Integer> findMatchingUsers(String userId) {
         List<LenzeChoiceDto> userChoices = choiceMapper.findChoicesByUserId(userId);
 
@@ -74,6 +96,10 @@ public class ChoiceService {
         return result;
     }
 
+    /**
+     * 특정 사용자의 선택 내역 반환
+     * @param userId 인증된 UID
+     */
     public List<MyChoiceDto> getChoicesByUserId(String userId) {
         List<Choice> choices = choiceRepository.findByUserIdOrderByChooseAtDesc(userId);
         return choices.stream()

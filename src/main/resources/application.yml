@@ -20,3 +20,6 @@ spring:
       enabled: true
     livereload:
       enabled: true
+
+firebase:
+  config-path: firebase/firebase-service-account.json

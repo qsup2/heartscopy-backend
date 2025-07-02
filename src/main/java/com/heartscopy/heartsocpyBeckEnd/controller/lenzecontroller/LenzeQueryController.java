@@ -19,7 +19,7 @@ public class LenzeQueryController {
 
     @GetMapping
     public Page<Lenze> getLenzes(@RequestParam(defaultValue = "0") int page) {
-        return lenzeService.getLenzesByPage(page, 30); // 10개씩 고정
+        return lenzeService.getLenzesByPage(page, 30);
     }
 
     @GetMapping("/search")
