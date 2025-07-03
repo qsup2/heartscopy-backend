@@ -10,4 +10,5 @@ import java.time.LocalDateTime;
 public class LenzeSearchResultDto {
     private Long lenzeId;
     private String topic;
+    private String writerId;
 }

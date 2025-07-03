@@ -48,7 +48,7 @@ public class LenzeService {
     public List<LenzeSearchResultDto> searchLenzes(String keyword, int page, int size) {
         PageRequest pageable = PageRequest.of(page, size);
         Page<Lenze> resultPage = lenzeRepository.findByTopicContainingOrderByCreatedAtDesc(keyword, pageable);
-        return resultPage.map(l -> new LenzeSearchResultDto(l.getLenzeId(), l.getTopic()))
+        return resultPage.map(l -> new LenzeSearchResultDto(l.getLenzeId(), l.getTopic(), l.getWriterId()))
                 .getContent();
     }
 
