@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/heartscopydb
-    username: root
-    password: Nudw236565
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
   http:
     encoding:
@@ -22,4 +22,6 @@ spring:
       enabled: true
 
 firebase:
-  config-path: firebase/firebase-service-account.json
+  private-key: ${FIREBASE_PRIVATE_KEY}
+  client-email: ${FIREBASE_CLIENT_EMAIL}
+  project-id: ${FIREBASE_PROJECT_ID}
