@@ -4,11 +4,13 @@ spring:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
+
   http:
     encoding:
       charset: UTF-8
       enabled: true
       force: true
+
   jpa:
     hibernate:
       ddl-auto: update
@@ -25,3 +27,7 @@ firebase:
   private-key: ${FIREBASE_PRIVATE_KEY}
   client-email: ${FIREBASE_CLIENT_EMAIL}
   project-id: ${FIREBASE_PROJECT_ID}
+
+logging:
+  level:
+    com.heartscopy: debug
