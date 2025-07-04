@@ -22,12 +22,14 @@ public class FirebaseConfig {
         try {
             String firebaseJson = System.getenv("FIREBASE_CONFIG_JSON");
 
-            if (firebaseJson == null || firebaseJson.isBlank()) {
+            if (firebaseJson == null) {
                 logger.error("FIREBASE_CONFIG_JSON 환경변수가 설정되지 않았습니다.");
                 throw new IllegalStateException("FIREBASE_CONFIG_JSON 환경변수가 설정되지 않았습니다.");
             }
 
             logger.info("FIREBASE_CONFIG_JSON 환경변수가 정상적으로 로드되었습니다.");
+
+            firebaseJson = firebaseJson.replace("\\n", "\n");
 
             InputStream serviceAccount = new ByteArrayInputStream(firebaseJson.getBytes(StandardCharsets.UTF_8));
 
