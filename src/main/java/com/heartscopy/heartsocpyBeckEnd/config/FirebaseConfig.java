@@ -6,11 +6,11 @@ import com.google.firebase.FirebaseOptions;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 @Component
 public class FirebaseConfig {
@@ -20,7 +20,16 @@ public class FirebaseConfig {
     @PostConstruct
     public void init() {
         try {
-            InputStream serviceAccount = new ClassPathResource("firebase/heartscopy-c5dae-firebase-adminsdk-k5m4j-db35d89050.json").getInputStream();
+            String firebaseJson = System.getenv("FIREBASE_CONFIG_JSON");
+
+            if (firebaseJson == null || firebaseJson.isBlank()) {
+                logger.error("FIREBASE_CONFIG_JSON 환경변수가 설정되지 않았습니다.");
+                throw new IllegalStateException("FIREBASE_CONFIG_JSON 환경변수가 설정되지 않았습니다.");
+            }
+
+            logger.info("FIREBASE_CONFIG_JSON 환경변수가 정상적으로 로드되었습니다.");
+
+            InputStream serviceAccount = new ByteArrayInputStream(firebaseJson.getBytes(StandardCharsets.UTF_8));
 
             FirebaseOptions options = FirebaseOptions.builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
@@ -33,9 +42,6 @@ public class FirebaseConfig {
                 logger.info("이미 초기화된 FirebaseApp이 존재합니다.");
             }
 
-        } catch (IOException e) {
-            logger.error("Firebase 초기화 중 IOException 발생", e);
-            throw new RuntimeException("Firebase 초기화 실패", e);
         } catch (Exception e) {
             logger.error("Firebase 초기화 중 예외 발생", e);
             throw new RuntimeException("Firebase 초기화 실패", e);
