@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface LenzeRepository extends JpaRepository<Lenze, Long> {
     @Query(value = "SELECT * FROM lenze ORDER BY RAND() LIMIT :#{#pageable.pageSize} OFFSET :#{#pageable.offset}",
-            countQuery = "SELECT COUNT(*) FROM Lenze",
+            countQuery = "SELECT COUNT(*) FROM lenze",
             nativeQuery = true)
     Page<Lenze> findRandomLenzes(Pageable pageable);
 
