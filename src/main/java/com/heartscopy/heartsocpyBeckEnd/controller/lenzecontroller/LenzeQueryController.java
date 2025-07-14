@@ -18,8 +18,8 @@ public class LenzeQueryController {
     private final LenzeService lenzeService;
 
     @GetMapping
-    public Page<Lenze> getLenzes(@RequestParam(defaultValue = "0") int page) {
-        return lenzeService.getLenzesByPage(page, 30);
+    public Page<Lenze> getRandomLenzes(@RequestParam(defaultValue = "0") int page) {
+        return lenzeService.getRandomLenzesByPage(page, 30);
     }
 
     @GetMapping("/search")

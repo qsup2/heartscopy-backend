@@ -11,8 +11,10 @@ import java.util.List;
 
 
 public interface LenzeRepository extends JpaRepository<Lenze, Long> {
-
-    Page<Lenze> findAll(Pageable pageable);
+    @Query(value = "SELECT * FROM lenze ORDER BY RAND() LIMIT :#{#pageable.pageSize} OFFSET :#{#pageable.offset}",
+            countQuery = "SELECT COUNT(*) FROM Lenze",
+            nativeQuery = true)
+    Page<Lenze> findRandomLenzes(Pageable pageable);
 
 
     @Query("SELECT l FROM Lenze l WHERE l.topic LIKE CONCAT('%', :keyword, '%') ORDER BY l.createdAt DESC")

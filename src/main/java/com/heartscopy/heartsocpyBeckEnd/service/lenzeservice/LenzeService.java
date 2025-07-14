@@ -7,6 +7,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,8 +41,9 @@ public class LenzeService {
     }
 
 
-    public Page<Lenze> getLenzesByPage(int page, int size) {
-        return lenzeRepository.findAll(PageRequest.of(page, size));
+    public Page<Lenze> getRandomLenzesByPage(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return lenzeRepository.findRandomLenzes(pageable);
     }
 
 
